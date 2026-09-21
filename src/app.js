@@ -203,8 +203,19 @@ async function registerServiceWorker() {
     $('#bgSyncText').textContent = 'Không hỗ trợ';
     return;
   }
+  // Tránh Service Worker cache asset cũ trong lúc phát triển với Vite.
+  if (import.meta.env.DEV) {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(registrations.map((registration) => registration.unregister()));
+    const cacheNames = await caches.keys();
+    await Promise.all(cacheNames.filter((name) => name.startsWith('market-survey-shell-')).map((name) => caches.delete(name)));
+    $('#swText').textContent = 'Tắt trong development';
+    $('#bgSyncText').textContent = 'Chỉ dùng ở production';
+    return;
+  }
   try {
-    const registration = await navigator.serviceWorker.register('/service-worker.js');
+    const registration = await navigator.serviceWorker.register('/service-worker.js', { updateViaCache: 'none' });
+    await registration.update();
     await navigator.serviceWorker.ready;
     $('#swText').textContent = 'Đã kích hoạt';
     $('#bgSyncText').textContent = 'sync' in registration ? 'Có hỗ trợ' : 'Dùng đồng bộ khi mở app';

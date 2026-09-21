@@ -1,4 +1,4 @@
-const CACHE_NAME = 'market-survey-shell-v1';
+const CACHE_NAME = 'market-survey-shell-v2';
 const APP_SHELL = ['/', '/index.html', '/manifest.webmanifest', '/icons/icon.svg'];
 const DB_NAME = 'market-survey-db';
 const DB_VERSION = 2;
