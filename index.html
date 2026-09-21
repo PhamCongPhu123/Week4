@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="description" content="Ứng dụng khảo sát thị trường hoạt động ngoại tuyến" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <title>Market Survey</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">FIELD RESEARCH</p>
+          <h1>Market Survey</h1>
+        </div>
+        <div id="networkBadge" class="status-badge" aria-live="polite">
+          <span class="status-dot"></span><span>Đang kiểm tra</span>
+        </div>
+      </header>
+
+      <main>
+        <section id="formView" class="view active">
+          <div class="summary-grid" aria-label="Thống kê phiếu khảo sát">
+            <article class="summary-card"><span>Đã lưu</span><strong id="totalCount">0</strong></article>
+            <article class="summary-card warning"><span>Chờ đồng bộ</span><strong id="pendingCount">0</strong></article>
+            <article class="summary-card success"><span>Đã đồng bộ</span><strong id="syncedCount">0</strong></article>
+          </div>
+
+          <form id="surveyForm" class="card">
+            <div class="section-heading">
+              <div><p class="step">PHIẾU MỚI</p><h2>Thông tin khảo sát</h2></div>
+              <button id="resetButton" type="button" class="text-button">Làm mới</button>
+            </div>
+
+            <div class="field-grid">
+              <label class="field">
+                <span>Họ tên người trả lời *</span>
+                <input id="respondentName" name="respondentName" required maxlength="100" placeholder="Nguyễn Văn An" autocomplete="name" />
+              </label>
+              <label class="field">
+                <span>Số điện thoại</span>
+                <input id="phone" name="phone" inputmode="tel" maxlength="20" placeholder="09xx xxx xxx" autocomplete="tel" />
+              </label>
+              <label class="field">
+                <span>Độ tuổi *</span>
+                <select id="ageGroup" name="ageGroup" required>
+                  <option value="">Chọn nhóm tuổi</option>
+                  <option>Dưới 18</option><option>18–24</option><option>25–34</option>
+                  <option>35–44</option><option>45–54</option><option>Trên 54</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Nghề nghiệp</span>
+                <input id="occupation" name="occupation" maxlength="100" placeholder="Ví dụ: Nhân viên văn phòng" />
+              </label>
+              <label class="field full">
+                <span>Sản phẩm quan tâm *</span>
+                <select id="product" name="product" required>
+                  <option value="">Chọn sản phẩm</option>
+                  <option>Thực phẩm & đồ uống</option><option>Thời trang</option>
+                  <option>Điện tử & công nghệ</option><option>Chăm sóc cá nhân</option>
+                  <option>Gia dụng</option><option>Khác</option>
+                </select>
+              </label>
+              <fieldset class="field full rating-field">
+                <legend>Mức độ quan tâm *</legend>
+                <div class="rating-options">
+                  <label><input type="radio" name="interestLevel" value="1" required /><span>1<small>Rất thấp</small></span></label>
+                  <label><input type="radio" name="interestLevel" value="2" /><span>2<small>Thấp</small></span></label>
+                  <label><input type="radio" name="interestLevel" value="3" /><span>3<small>Vừa</small></span></label>
+                  <label><input type="radio" name="interestLevel" value="4" /><span>4<small>Cao</small></span></label>
+                  <label><input type="radio" name="interestLevel" value="5" /><span>5<small>Rất cao</small></span></label>
+                </div>
+              </fieldset>
+              <label class="field full">
+                <span>Ý kiến / ghi chú</span>
+                <textarea id="notes" name="notes" rows="4" maxlength="500" placeholder="Ghi nhận thêm ý kiến của khách hàng..."></textarea>
+                <small class="counter"><span id="noteCount">0</span>/500</small>
+              </label>
+            </div>
+
+            <div class="capture-grid">
+              <section class="capture-box">
+                <div class="capture-icon" aria-hidden="true">⌖</div>
+                <div><strong>Vị trí GPS</strong><p id="locationText">Chưa lấy vị trí</p></div>
+                <button id="locationButton" type="button" class="secondary-button">Lấy vị trí</button>
+              </section>
+              <section class="capture-box photo-box">
+                <div class="capture-icon" aria-hidden="true">▣</div>
+                <div><strong>Ảnh sản phẩm</strong><p id="photoText">Chưa có ảnh</p></div>
+                <button id="cameraButton" type="button" class="secondary-button">Chụp / chọn ảnh</button>
+                <input id="photoInput" type="file" accept="image/*" capture="environment" hidden />
+                <img id="photoPreview" alt="Ảnh sản phẩm đã chọn" hidden />
+              </section>
+            </div>
+
+            <button id="saveButton" type="submit" class="primary-button">Lưu phiếu khảo sát</button>
+            <p class="form-hint">Phiếu luôn được lưu vào thiết bị trước, sau đó tự đồng bộ khi có mạng.</p>
+          </form>
+        </section>
+
+        <section id="recordsView" class="view">
+          <div class="section-heading records-heading">
+            <div><p class="step">DỮ LIỆU CỤC BỘ</p><h2>Danh sách phiếu</h2></div>
+            <button id="syncButton" type="button" class="secondary-button">Đồng bộ ngay</button>
+          </div>
+          <div id="recordList" class="record-list"></div>
+          <div id="emptyState" class="empty-state">
+            <span>☷</span><h3>Chưa có phiếu khảo sát</h3><p>Phiếu đã lưu sẽ xuất hiện tại đây.</p>
+          </div>
+        </section>
+
+        <section id="settingsView" class="view">
+          <div class="section-heading"><div><p class="step">CẤU HÌNH</p><h2>Đồng bộ Google Sheets</h2></div></div>
+          <div class="card settings-card">
+            <label class="field">
+              <span>Google Apps Script Web App URL</span>
+              <input id="syncUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec" />
+            </label>
+            <p class="help-text">Dán URL sau khi triển khai file <code>google-apps-script/Code.gs</code> dưới dạng Web App. URL chỉ được lưu trên thiết bị này.</p>
+            <button id="saveSettingsButton" type="button" class="primary-button">Lưu cấu hình</button>
+          </div>
+          <div class="card about-card">
+            <h3>Trạng thái ứng dụng</h3>
+            <dl><div><dt>Chế độ</dt><dd id="platformText">Web PWA</dd></div><div><dt>Service Worker</dt><dd id="swText">Đang kiểm tra</dd></div><div><dt>Background Sync</dt><dd id="bgSyncText">Đang kiểm tra</dd></div></dl>
+          </div>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="Điều hướng chính">
+        <button class="nav-button active" data-view="formView"><span>＋</span>Phiếu mới</button>
+        <button class="nav-button" data-view="recordsView"><span>☷</span>Danh sách</button>
+        <button class="nav-button" data-view="settingsView"><span>⚙</span>Cài đặt</button>
+      </nav>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </div>
+    <script type="module" src="/src/app.js"></script>
+  </body>
+</html>

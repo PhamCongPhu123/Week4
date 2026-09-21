@@ -1,0 +1,13 @@
+{
+  "name": "Market Survey PWA",
+  "short_name": "Survey",
+  "description": "Ứng dụng khảo sát thị trường offline-first",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#2563eb",
+  "lang": "vi",
+  "icons": [
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
